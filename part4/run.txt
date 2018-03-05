@@ -1,0 +1,1 @@
+.\deploy.ps1 -subscriptionId a8b0d741-d02c-4b7c-a689-408d76a72fd7 -resourceGroupName reg2rg1
