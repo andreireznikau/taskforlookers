@@ -310,7 +310,6 @@
                 "protocol": "Tcp",
                 "sourcePortRange": "*",
                 "destinationPortRanges": [
-                    "3389",
                     "5000-5005"
                 ],
                 "sourceAddressPrefixes": [
