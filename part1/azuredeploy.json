@@ -558,11 +558,32 @@
              "Extensions": "",
              "Paths": "%SystemDrive%\\Inetpub\\wwwroot",
              "Processes": ""
-           },
-           "Properties": {
-              "MachineName": "[concat(parameters('vmNamePrefix'), copyindex())]"
-            }
+           }
          },
+        "protectedSettings": null
+      }
+    },
+    {
+      "type": "Microsoft.Compute/virtualMachines/extensions",
+      "name": "[concat(parameters('vmNamePrefix'), copyindex(),'/DSCExtention')]",
+      "copy": {
+        "name": "DCSExtensionLoop",
+        "count": "[variables('numberOfInstances')]"
+      },
+      "apiVersion": "2015-05-01-preview",
+      "location": "[resourceGroup().location]",
+      "dependsOn": [
+        "[concat('Microsoft.Compute/virtualMachines/', parameters('vmNamePrefix'), copyindex())]"
+      ],
+      "properties": {
+        "publisher": "Microsoft.Powershell",
+        "type": "DSC",
+        "typeHandlerVersion": "2.72",
+        "autoUpgradeMinorVersion": true,
+        "settings": {
+          "ModulesUrl": "[parameters('modulesUrl')]",
+          "ConfigurationFunction": "[parameters('configurationFunction')]"
+      },
         "protectedSettings": null
       }
     }
