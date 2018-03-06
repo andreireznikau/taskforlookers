@@ -10,6 +10,12 @@
     },
     "dnsNameforLBIP": {
       "value": "reg1lb"
+    },
+    "modulesUrl": {
+      "value": "https://github.com/andreireznikau/taskforlookers/raw/master/part2/MyWebsite.zip"
+    },
+    "configurationFunction": {
+      "value": "MyWebsite.ps1\\MyWebsite"
     }
   }
 }

@@ -96,6 +96,19 @@
       "metadata": {
         "description": "VM Size"
       }
+    },
+    "modulesUrl": {
+      "type": "string",
+      "metadata": {
+        "description": "URL for the DSC configuration module."
+      }
+    },
+    "configurationFunction": {
+      "type": "string",
+      "defaultValue": "MyWebsite.ps1\\MyWebsite",
+      "metadata": {
+        "description": "DSC configuration function to call"
+      }
     }
   },
   "variables": {
@@ -310,6 +323,7 @@
                 "protocol": "Tcp",
                 "sourcePortRange": "*",
                 "destinationPortRanges": [
+                    "3389",
                     "5000-5005"
                 ],
                 "sourceAddressPrefixes": [
@@ -511,6 +525,45 @@
             "storageUri": "[concat('http://',variables('storageAccountName'),'.blob.core.windows.net')]"
           }
         }
+      }
+    },
+    {
+      "type": "Microsoft.Compute/virtualMachines/extensions",
+      "name": "[concat(parameters('vmNamePrefix'), copyindex(),'/MSAntimalwareExtention')]",
+      "copy": {
+        "name": "MSAntimalwareExtensionLoop",
+        "count": "[variables('numberOfInstances')]"
+      },
+      "apiVersion": "2015-05-01-preview",
+      "location": "[resourceGroup().location]",
+      "dependsOn": [
+        "[concat('Microsoft.Compute/virtualMachines/', parameters('vmNamePrefix'), copyindex())]"
+      ],
+      "properties": {
+        "publisher": "Microsoft.Azure.Security",
+        "type": "IaaSAntimalware",
+        "typeHandlerVersion": "1.5",
+        "autoUpgradeMinorVersion": true,
+        "settings": {
+          "AntimalwareEnabled": true,
+          "RealtimeProtectionEnabled": true,
+          "ScheduledScanSettings": {
+            "isEnabled": true,
+             "day": "6",
+             "time": "1260",
+             "scanType": "Full"
+           },
+          
+           "Exclusions": {
+             "Extensions": "",
+             "Paths": "%SystemDrive%\\Inetpub\\wwwroot",
+             "Processes": ""
+           },
+           "Properties": {
+              "MachineName": "[concat(parameters('vmNamePrefix'), copyindex())]"
+            }
+         },
+        "protectedSettings": null
       }
     }
   ]
